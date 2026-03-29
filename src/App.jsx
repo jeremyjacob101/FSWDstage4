@@ -1,9 +1,12 @@
 import "./App.css";
+import Workspace from "./components/Workspace";
 
 function App() {
-  return {
-    /* Implement just component defintions here to keep app.jsx clean and clear */
-  };
+  return (
+    <main className="main-workspace">
+      <Workspace />
+    </main>
+  );
 }
 
 export default App;

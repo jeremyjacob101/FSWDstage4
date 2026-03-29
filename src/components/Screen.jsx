@@ -1,1 +1,0 @@
-/* implement screen area here */

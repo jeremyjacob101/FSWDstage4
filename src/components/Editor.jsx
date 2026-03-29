@@ -1,1 +1,0 @@
-/* implement editor area here */
