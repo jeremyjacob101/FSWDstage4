@@ -14,6 +14,7 @@ function Editor({
   typingStyle,
   onApplyAll,
   onChangeTypingStyle,
+  onResetTypingStyle,
   onClearText,
   onDeleteCharacter,
   onDeleteWord,
@@ -49,12 +50,19 @@ function Editor({
       />
 
       <div className="editor-sidebar">
-        <StorageControls runs={runs} onLoadRuns={onLoadRuns} />
+        <div className="editor-sidebar-header">
+          <button type="button" className="editor-button editor-button-icon">
+            <img className="editor-icon" src="/icons/user.svg" alt="User" />
+          </button>
+
+          <StorageControls runs={runs} onLoadRuns={onLoadRuns} />
+        </div>
 
         <TextStyling
           typingStyle={typingStyle}
           onApplyAll={onApplyAll}
           onChangeTypingStyle={onChangeTypingStyle}
+          onResetTypingStyle={onResetTypingStyle}
         />
       </div>
     </section>

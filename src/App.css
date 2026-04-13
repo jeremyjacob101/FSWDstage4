@@ -72,6 +72,13 @@
   gap: 12px;
 }
 
+.editor-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .editor-keyboard-pane,
 .editor-controls-pane {
   min-width: 0;

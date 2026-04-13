@@ -48,6 +48,10 @@ function Workspace() {
     }));
   }
 
+  function handleResetTypingStyle() {
+    setTypingStyle({ ...DEFAULT_STYLE });
+  }
+
   function handleInsertText(value) {
     updateRuns(insertText(runs, value, typingStyle));
 
@@ -70,42 +74,40 @@ function Workspace() {
     setRuns(newRuns);
   }
 
-  const screenProps = {
-    runs,
-    searchValue,
-    typingStyle,
-  };
-
-  const editorProps = {
-    runs,
-    onLoadRuns: handleLoadRuns,
-    canUndo: history.length > 0,
-    isCapsLockOn,
-    isVirtualShiftOn,
-    keyboardMode,
-    replaceValue,
-    searchValue,
-    typingStyle,
-    onApplyAll: () => updateRuns(applyStyleToAll(runs, typingStyle)),
-    onChangeTypingStyle: handleChangeTypingStyle,
-    onClearText: () => updateRuns(clearText(runs)),
-    onDeleteCharacter: () => updateRuns(deleteLastCharacter(runs)),
-    onDeleteWord: () => updateRuns(deleteLastWord(runs)),
-    onInsertText: handleInsertText,
-    onKeyboardModeChange: setKeyboardMode,
-    onToggleCapsLock: () => setIsCapsLockOn((currentValue) => !currentValue),
-    onToggleVirtualShift: () =>
-      setIsVirtualShiftOn((currentValue) => !currentValue),
-    onReplace: () => updateRuns(replaceText(runs, searchValue, replaceValue)),
-    onReplaceChange: setReplaceValue,
-    onSearchChange: setSearchValue,
-    onUndo: handleUndo,
-  };
-
   return (
     <>
-      <Screen {...screenProps} />
-      <Editor {...editorProps} />
+      <Screen runs={runs} searchValue={searchValue} typingStyle={typingStyle} />
+      <Editor
+        runs={runs}
+        canUndo={history.length > 0}
+        isCapsLockOn={isCapsLockOn}
+        isVirtualShiftOn={isVirtualShiftOn}
+        keyboardMode={keyboardMode}
+        replaceValue={replaceValue}
+        searchValue={searchValue}
+        typingStyle={typingStyle}
+        onApplyAll={() => updateRuns(applyStyleToAll(runs, typingStyle))}
+        onChangeTypingStyle={handleChangeTypingStyle}
+        onResetTypingStyle={handleResetTypingStyle}
+        onClearText={() => updateRuns(clearText(runs))}
+        onDeleteCharacter={() => updateRuns(deleteLastCharacter(runs))}
+        onDeleteWord={() => updateRuns(deleteLastWord(runs))}
+        onInsertText={handleInsertText}
+        onKeyboardModeChange={setKeyboardMode}
+        onLoadRuns={handleLoadRuns}
+        onToggleCapsLock={() =>
+          setIsCapsLockOn((currentValue) => !currentValue)
+        }
+        onToggleVirtualShift={() =>
+          setIsVirtualShiftOn((currentValue) => !currentValue)
+        }
+        onReplace={() =>
+          updateRuns(replaceText(runs, searchValue, replaceValue))
+        }
+        onReplaceChange={setReplaceValue}
+        onSearchChange={setSearchValue}
+        onUndo={handleUndo}
+      />
     </>
   );
 }

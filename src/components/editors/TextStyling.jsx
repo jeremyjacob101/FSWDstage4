@@ -4,7 +4,12 @@ import {
   DEFAULT_SIZE_OPTIONS,
 } from "../utils/Defaults";
 
-function TextStyling({ typingStyle, onApplyAll, onChangeTypingStyle }) {
+function TextStyling({
+  typingStyle,
+  onApplyAll,
+  onChangeTypingStyle,
+  onResetTypingStyle,
+}) {
   function toggleStyle(key, activeValue, inactiveValue) {
     onChangeTypingStyle(
       key,
@@ -103,6 +108,14 @@ function TextStyling({ typingStyle, onApplyAll, onChangeTypingStyle }) {
           onClick={onApplyAll}
         >
           Apply All
+        </button>
+
+        <button
+          type="button"
+          className="editor-button editor-button-full"
+          onClick={onResetTypingStyle}
+        >
+          Reset
         </button>
       </div>
     </div>
