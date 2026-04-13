@@ -196,11 +196,6 @@ function Workspace() {
       return false;
     }
 
-    if (trimmedFileName.includes("/")) {
-      window.alert('File name cannot include "/".');
-      return false;
-    }
-
     if (hasUserFile(currentUser, trimmedFileName)) {
       window.alert("File already exists.");
       return false;
@@ -295,7 +290,7 @@ function Workspace() {
 
   function handleLoadRuns(newRuns) {
     if (screens.length >= MAX_SCREENS) {
-      window.alert("Maximum of 5 screens reached.");
+      window.alert(`Maximum of ${MAX_SCREENS} screens reached.`);
       return;
     }
 
