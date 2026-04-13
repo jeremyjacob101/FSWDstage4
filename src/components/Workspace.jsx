@@ -65,6 +65,11 @@ function Workspace() {
     setHistory((currentHistory) => currentHistory.slice(0, -1));
   }
 
+  function handleLoadRuns(newRuns) {
+    rememberState();
+    setRuns(newRuns);
+  }
+
   const screenProps = {
     runs,
     searchValue,
@@ -73,10 +78,7 @@ function Workspace() {
 
   const editorProps = {
     runs,
-    onLoadRuns: (newRuns) => {
-      rememberState();
-      setRuns(newRuns);
-    },
+    onLoadRuns: handleLoadRuns,
     canUndo: history.length > 0,
     isCapsLockOn,
     isVirtualShiftOn,

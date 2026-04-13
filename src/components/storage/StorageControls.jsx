@@ -7,62 +7,77 @@ export default function StorageControls({ runs, onLoadRuns }) {
 
   function handleSaveClick() {
     const fileName = window.prompt("Please enter a name to save the file:");
-    
-    if (!fileName) {
+    const trimmedFileName = fileName?.trim();
+
+    if (!trimmedFileName) {
+      return;
+    }
+
+    if (localStorage.getItem(trimmedFileName) !== null) {
+      window.alert("File already exists.");
       return;
     }
 
     try {
       const dataAsText = JSON.stringify(runs);
-      localStorage.setItem(`save_${fileName}`, dataAsText);
-      
+      localStorage.setItem(trimmedFileName, dataAsText);
+
       if (isMenuOpen) {
-         updateSavedFilesList();
+        loadSavedFiles();
       }
-    } catch (error) {
+    } catch {
       window.alert("Error! Could not save. Storage might be full.");
     }
   }
 
-  function updateSavedFilesList() {
+  function loadSavedFiles() {
     const filesFound = [];
-    
+
     for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith("save_")) {
-            const justTheName = key.substring(5);
-            filesFound.push(justTheName);
-        }
+      const key = localStorage.key(i);
+      if (key) {
+        filesFound.push(key);
+      }
     }
-    
+
+    filesFound.sort((firstFile, secondFile) =>
+      firstFile.localeCompare(secondFile),
+    );
     setSavedFiles(filesFound);
   }
 
-  function handleDownloadMenuClick() {
+  function handleMenuToggle() {
     if (!isMenuOpen) {
-      updateSavedFilesList();
+      loadSavedFiles();
       setIsMenuOpen(true);
-    } else {
+      return;
+    }
+
+    setIsMenuOpen(false);
+  }
+
+  function handleMenuBlur(event) {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
       setIsMenuOpen(false);
     }
   }
 
   function handleLoadFile(fileName) {
     try {
-      const savedData = localStorage.getItem(`save_${fileName}`);
+      const savedData = localStorage.getItem(fileName);
       if (savedData) {
         const parsedRuns = JSON.parse(savedData);
         onLoadRuns(parsedRuns);
       }
-    } catch (error) {
+    } catch {
       window.alert("Error loading file.");
     }
-    
+
     setIsMenuOpen(false);
   }
 
   return (
-    <>
+    <div className="storage-controls-container">
       <button
         type="button"
         className="editor-button editor-button-icon"
@@ -72,11 +87,11 @@ export default function StorageControls({ runs, onLoadRuns }) {
         <img className="editor-icon" src="/icons/upload.svg" alt="Save As" />
       </button>
 
-      <div className="storage-dropdown-container">
+      <div className="storage-dropdown-container" onBlur={handleMenuBlur}>
         <button
           type="button"
           className="editor-button editor-button-icon"
-          onClick={handleDownloadMenuClick}
+          onClick={handleMenuToggle}
           title="Load File"
         >
           <img className="editor-icon" src="/icons/download.svg" alt="Load" />
@@ -101,6 +116,6 @@ export default function StorageControls({ runs, onLoadRuns }) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,5 @@
 import Keyboard from "./Keyboard";
+import StorageControls from "../storage/StorageControls";
 import TextStyling from "./TextStyling";
 
 function Editor({
@@ -28,8 +29,6 @@ function Editor({
   return (
     <section className="panel editor">
       <Keyboard
-        runs={runs}
-        onLoadRuns={onLoadRuns}
         canUndo={canUndo}
         isCapsLockOn={isCapsLockOn}
         isVirtualShiftOn={isVirtualShiftOn}
@@ -49,11 +48,15 @@ function Editor({
         onUndo={onUndo}
       />
 
-      <TextStyling
-        typingStyle={typingStyle}
-        onApplyAll={onApplyAll}
-        onChangeTypingStyle={onChangeTypingStyle}
-      />
+      <div className="editor-sidebar">
+        <StorageControls runs={runs} onLoadRuns={onLoadRuns} />
+
+        <TextStyling
+          typingStyle={typingStyle}
+          onApplyAll={onApplyAll}
+          onChangeTypingStyle={onChangeTypingStyle}
+        />
+      </div>
     </section>
   );
 }

@@ -1,9 +1,6 @@
 import { getKeyboardRows, getNextKeyboardMode } from "../utils/Helpers";
-import StorageControls from "../storage/StorageControls";
 
 function Keyboard({
-  runs,
-  onLoadRuns,
   canUndo,
   isCapsLockOn,
   isVirtualShiftOn,
@@ -22,10 +19,9 @@ function Keyboard({
   onToggleVirtualShift,
   onUndo,
 }) {
-  const isShiftActive = isVirtualShiftOn;
   const activeKeyboard = getKeyboardRows(
     keyboardMode,
-    isShiftActive,
+    isVirtualShiftOn,
     isCapsLockOn,
   );
 
@@ -52,7 +48,6 @@ function Keyboard({
         >
           <img className="editor-icon" src="/icons/globe.svg" />
         </button>
-        <StorageControls runs={runs} onLoadRuns={onLoadRuns} />
 
         <div className="editor-find-replace">
           <input
@@ -175,7 +170,7 @@ function Keyboard({
           <button
             type="button"
             className={
-              isShiftActive
+              isVirtualShiftOn
                 ? "keyboard-key keyboard-key-shift is-active"
                 : "keyboard-key keyboard-key-shift"
             }
@@ -198,7 +193,7 @@ function Keyboard({
           <button
             type="button"
             className={
-              isShiftActive
+              isVirtualShiftOn
                 ? "keyboard-key keyboard-key-shift is-active"
                 : "keyboard-key keyboard-key-shift"
             }
