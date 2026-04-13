@@ -33,6 +33,13 @@ export function cloneRuns(runs) {
   }));
 }
 
+export function cloneScreens(screens) {
+  return screens.map((screen) => ({
+    id: screen.id,
+    runs: cloneRuns(screen.runs),
+  }));
+}
+
 export function sameStyle(firstStyle, secondStyle) {
   return (
     firstStyle.fontFamily === secondStyle.fontFamily &&

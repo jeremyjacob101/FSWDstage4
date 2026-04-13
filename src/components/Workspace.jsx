@@ -3,6 +3,7 @@ import {
   applyStyleToAll,
   clearText,
   cloneRuns,
+  cloneScreens,
   deleteLastCharacter,
   deleteLastWord,
   getPlainText,
@@ -22,13 +23,6 @@ import {
 import { useState } from "react";
 import Editor from "./editors/Editor";
 import ScreensPanel from "./screens/ScreensPanel";
-
-function cloneScreens(screens) {
-  return screens.map((screen) => ({
-    id: screen.id,
-    runs: cloneRuns(screen.runs),
-  }));
-}
 
 function Workspace() {
   const [currentUser, setCurrentUser] = useState(() => getStoredCurrentUser());
