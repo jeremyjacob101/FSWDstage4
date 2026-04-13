@@ -12,7 +12,7 @@ function UserMenu({ currentUser, onCreateAccount, onLogOut, onSignIn }) {
     setPassword("");
   }
 
-  function handleMenuToggle() {
+  function handleUserMenuToggle() {
     setIsMenuOpen((currentValue) => !currentValue);
   }
 
@@ -57,7 +57,7 @@ function UserMenu({ currentUser, onCreateAccount, onLogOut, onSignIn }) {
       <button
         type="button"
         className="editor-button editor-button-icon"
-        onClick={handleMenuToggle}
+        onClick={handleUserMenuToggle}
         title={currentUser ? currentUser : "User"}
       >
         <img className="editor-icon" src="/icons/user.svg" alt="User" />

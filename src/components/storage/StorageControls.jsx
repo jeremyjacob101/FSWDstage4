@@ -28,7 +28,7 @@ export default function StorageControls({
     setSavedFiles(listUserFiles(currentUser));
   }
 
-  function handleMenuToggle() {
+  function handleLoadMenuToggle() {
     if (!canLoad) {
       return;
     }
@@ -79,7 +79,7 @@ export default function StorageControls({
         <button
           type="button"
           className="editor-button editor-button-icon"
-          onClick={handleMenuToggle}
+          onClick={handleLoadMenuToggle}
           title={canLoad ? "Load File" : "Maximum of 5 screens reached"}
           disabled={!canLoad}
         >
