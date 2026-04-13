@@ -14,6 +14,7 @@ function Editor({
   onSaveRuns,
   onSignIn,
   canUndo,
+  canRedo,
   isDocumentOpen,
   isCapsLockOn,
   isVirtualShiftOn,
@@ -35,11 +36,13 @@ function Editor({
   onToggleCapsLock,
   onToggleVirtualShift,
   onUndo,
+  onRedo,
 }) {
   return (
     <section className="panel editor">
       <Keyboard
         canUndo={canUndo}
+        canRedo={canRedo}
         isDocumentOpen={isDocumentOpen}
         isCapsLockOn={isCapsLockOn}
         isVirtualShiftOn={isVirtualShiftOn}
@@ -57,6 +60,7 @@ function Editor({
         onToggleCapsLock={onToggleCapsLock}
         onToggleVirtualShift={onToggleVirtualShift}
         onUndo={onUndo}
+        onRedo={onRedo}
       />
 
       <div className="editor-sidebar">

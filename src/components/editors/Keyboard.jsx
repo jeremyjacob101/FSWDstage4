@@ -2,6 +2,7 @@ import { getKeyboardRows, getNextKeyboardMode } from "../utils/Helpers";
 
 function Keyboard({
   canUndo,
+  canRedo,
   isDocumentOpen,
   isCapsLockOn,
   isVirtualShiftOn,
@@ -19,6 +20,7 @@ function Keyboard({
   onToggleCapsLock,
   onToggleVirtualShift,
   onUndo,
+  onRedo,
 }) {
   const activeKeyboard = getKeyboardRows(
     keyboardMode,
@@ -84,6 +86,14 @@ function Keyboard({
             disabled={!canUndo || !isDocumentOpen}
           >
             <img className="editor-icon" src="/icons/undo.svg" />
+          </button>
+          <button
+            type="button"
+            className="editor-button editor-button-icon"
+            onClick={onRedo}
+            disabled={!canRedo || !isDocumentOpen}
+          >
+            <img className="editor-icon" src="/icons/redo.svg" />
           </button>
           <button
             type="button"

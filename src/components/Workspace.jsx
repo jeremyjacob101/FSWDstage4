@@ -43,6 +43,7 @@ function Workspace() {
   const [searchValue, setSearchValue] = useState("");
   const [replaceValue, setReplaceValue] = useState("");
   const [history, setHistory] = useState([]);
+  const [redoHistory, setRedoHistory] = useState([]);
   const activeScreen =
     screens.find((screen) => screen.id === selectedScreenId) ??
     screens[0] ??
@@ -51,6 +52,18 @@ function Workspace() {
   const runs = activeScreen ? activeScreen.runs : [];
   const isDocumentOpen = activeScreen !== null;
 
+  function createSnapshot(
+    snapshotScreens = screens,
+    snapshotStyle = typingStyle,
+    snapshotScreenId = activeScreenId,
+  ) {
+    return {
+      screens: cloneScreens(snapshotScreens),
+      selectedScreenId: snapshotScreenId,
+      typingStyle: { ...snapshotStyle },
+    };
+  }
+
   function rememberState(
     snapshotScreens = screens,
     snapshotStyle = typingStyle,
@@ -58,12 +71,16 @@ function Workspace() {
   ) {
     setHistory((currentHistory) => [
       ...currentHistory.slice(-20),
-      {
-        screens: cloneScreens(snapshotScreens),
-        selectedScreenId: snapshotScreenId,
-        typingStyle: { ...snapshotStyle },
-      },
+      createSnapshot(snapshotScreens, snapshotStyle, snapshotScreenId),
     ]);
+    setRedoHistory([]);
+  }
+
+  function restoreState(snapshot) {
+    setScreens(cloneScreens(snapshot.screens));
+    setSelectedScreenId(snapshot.selectedScreenId);
+    setTypingStyle({ ...snapshot.typingStyle });
+    setEnteringScreenId(null);
   }
 
   function updateRuns(nextRuns) {
@@ -153,6 +170,7 @@ function Workspace() {
     setSelectedScreenId(null);
     setEnteringScreenId(null);
     setHistory([]);
+    setRedoHistory([]);
     return true;
   }
 
@@ -254,13 +272,30 @@ function Workspace() {
 
   function handleUndo() {
     const previousState = history[history.length - 1];
-    if (!previousState) return;
+    if (!previousState) {
+      return;
+    }
 
-    setScreens(cloneScreens(previousState.screens));
-    setSelectedScreenId(previousState.selectedScreenId);
-    setTypingStyle({ ...previousState.typingStyle });
-    setEnteringScreenId(null);
+    setRedoHistory((currentHistory) => [
+      ...currentHistory.slice(-20),
+      createSnapshot(),
+    ]);
+    restoreState(previousState);
     setHistory((currentHistory) => currentHistory.slice(0, -1));
+  }
+
+  function handleRedo() {
+    const nextState = redoHistory[redoHistory.length - 1];
+    if (!nextState) {
+      return;
+    }
+
+    setHistory((currentHistory) => [
+      ...currentHistory.slice(-20),
+      createSnapshot(),
+    ]);
+    restoreState(nextState);
+    setRedoHistory((currentHistory) => currentHistory.slice(0, -1));
   }
 
   function handleLoadRuns(newRuns) {
@@ -309,6 +344,7 @@ function Workspace() {
         currentUser={currentUser}
         runs={runs}
         canUndo={isDocumentOpen && history.length > 0}
+        canRedo={isDocumentOpen && redoHistory.length > 0}
         isDocumentOpen={isDocumentOpen}
         canLoadRuns={screens.length < MAX_SCREENS}
         isCapsLockOn={isCapsLockOn}
@@ -342,6 +378,7 @@ function Workspace() {
         onReplaceChange={setReplaceValue}
         onSearchChange={setSearchValue}
         onUndo={handleUndo}
+        onRedo={handleRedo}
       />
     </>
   );
