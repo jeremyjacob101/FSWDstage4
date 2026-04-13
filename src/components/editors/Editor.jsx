@@ -1,10 +1,17 @@
 import Keyboard from "./Keyboard";
+import UserMenu from "../auth/UserMenu";
 import StorageControls from "../storage/StorageControls";
 import TextStyling from "./TextStyling";
 
 function Editor({
+  currentUser,
   runs,
+  canLoadRuns,
   onLoadRuns,
+  onCreateAccount,
+  onLogOut,
+  onSaveRuns,
+  onSignIn,
   canUndo,
   isDocumentOpen,
   isCapsLockOn,
@@ -53,18 +60,20 @@ function Editor({
 
       <div className="editor-sidebar">
         <div className="editor-sidebar-header">
-          <button
-            type="button"
-            className="editor-button editor-button-icon"
-            disabled={!isDocumentOpen}
-          >
-            <img className="editor-icon" src="/icons/user.svg" alt="User" />
-          </button>
+          <UserMenu
+            currentUser={currentUser}
+            onCreateAccount={onCreateAccount}
+            onLogOut={onLogOut}
+            onSignIn={onSignIn}
+          />
 
           <StorageControls
+            currentUser={currentUser}
             runs={runs}
             canSave={isDocumentOpen}
+            canLoad={canLoadRuns}
             onLoadRuns={onLoadRuns}
+            onSaveRuns={onSaveRuns}
           />
         </div>
 

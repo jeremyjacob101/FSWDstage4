@@ -1,3 +1,5 @@
+export const MAX_SCREENS = 5;
+
 export const DEFAULT_STYLE = {
   fontFamily: "Arial, sans-serif",
   fontSize: 18,

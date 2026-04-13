@@ -1,7 +1,15 @@
 import { useState } from "react";
+import { listUserFiles, loadUserFile } from "../utils/AuthStorage";
 import "./StorageControls.css";
 
-export default function StorageControls({ runs, canSave, onLoadRuns }) {
+export default function StorageControls({
+  currentUser,
+  runs,
+  canSave,
+  canLoad,
+  onLoadRuns,
+  onSaveRuns,
+}) {
   const [savedFiles, setSavedFiles] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -10,47 +18,21 @@ export default function StorageControls({ runs, canSave, onLoadRuns }) {
       return;
     }
 
-    const fileName = window.prompt("Please enter a name to save the file:");
-    const trimmedFileName = fileName?.trim();
-
-    if (!trimmedFileName) {
-      return;
-    }
-
-    if (localStorage.getItem(trimmedFileName) !== null) {
-      window.alert("File already exists.");
-      return;
-    }
-
-    try {
-      const dataAsText = JSON.stringify(runs);
-      localStorage.setItem(trimmedFileName, dataAsText);
-
-      if (isMenuOpen) {
-        loadSavedFiles();
-      }
-    } catch {
-      window.alert("Error! Could not save. Storage might be full.");
+    const didSave = onSaveRuns(runs);
+    if (didSave && isMenuOpen) {
+      loadSavedFiles();
     }
   }
 
   function loadSavedFiles() {
-    const filesFound = [];
-
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key) {
-        filesFound.push(key);
-      }
-    }
-
-    filesFound.sort((firstFile, secondFile) =>
-      firstFile.localeCompare(secondFile),
-    );
-    setSavedFiles(filesFound);
+    setSavedFiles(listUserFiles(currentUser));
   }
 
   function handleMenuToggle() {
+    if (!canLoad) {
+      return;
+    }
+
     if (!isMenuOpen) {
       loadSavedFiles();
       setIsMenuOpen(true);
@@ -68,10 +50,11 @@ export default function StorageControls({ runs, canSave, onLoadRuns }) {
 
   function handleLoadFile(fileName) {
     try {
-      const savedData = localStorage.getItem(fileName);
-      if (savedData) {
-        const parsedRuns = JSON.parse(savedData);
+      const parsedRuns = loadUserFile(currentUser, fileName);
+      if (Array.isArray(parsedRuns)) {
         onLoadRuns(parsedRuns);
+      } else {
+        window.alert("Error loading file.");
       }
     } catch {
       window.alert("Error loading file.");
@@ -97,12 +80,13 @@ export default function StorageControls({ runs, canSave, onLoadRuns }) {
           type="button"
           className="editor-button editor-button-icon"
           onClick={handleMenuToggle}
-          title="Load File"
+          title={canLoad ? "Load File" : "Maximum of 5 screens reached"}
+          disabled={!canLoad}
         >
           <img className="editor-icon" src="/icons/download.svg" alt="Load" />
         </button>
 
-        {isMenuOpen && (
+        {isMenuOpen && canLoad && (
           <div className="storage-dropdown-menu">
             {savedFiles.length === 0 ? (
               <div className="storage-dropdown-empty">No files to load</div>

@@ -1,0 +1,67 @@
+.user-menu-container {
+  position: relative;
+}
+
+.user-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 220px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-menu-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.user-menu-tab {
+  min-height: 38px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #1f2937;
+  font: inherit;
+}
+
+.user-menu-tab.is-active {
+  background: #4b5563;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+.user-menu-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.user-menu-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+}
+
+.user-menu-label {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.user-menu-name {
+  font-weight: 600;
+  color: #111827;
+}

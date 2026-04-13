@@ -1,4 +1,4 @@
-import { DEFAULT_STYLE } from "./utils/Defaults";
+import { DEFAULT_STYLE, MAX_SCREENS } from "./utils/Defaults";
 import {
   applyStyleToAll,
   clearText,
@@ -9,11 +9,19 @@ import {
   insertText,
   replaceText,
 } from "./utils/Helpers";
+import {
+  clearStoredCurrentUser,
+  createStoredUser,
+  getStoredCurrentUser,
+  getStoredPassword,
+  hasStoredUser,
+  hasUserFile,
+  saveUserFile,
+  setStoredCurrentUser,
+} from "./utils/AuthStorage";
 import { useState } from "react";
 import Editor from "./editors/Editor";
 import ScreensPanel from "./screens/ScreensPanel";
-
-const MAX_SCREENS = 5;
 
 function cloneScreens(screens) {
   return screens.map((screen) => ({
@@ -23,6 +31,7 @@ function cloneScreens(screens) {
 }
 
 function Workspace() {
+  const [currentUser, setCurrentUser] = useState(() => getStoredCurrentUser());
   const [screens, setScreens] = useState([]);
   const [selectedScreenId, setSelectedScreenId] = useState(null);
   const [enteringScreenId, setEnteringScreenId] = useState(null);
@@ -86,6 +95,67 @@ function Workspace() {
     setTypingStyle({ ...DEFAULT_STYLE });
   }
 
+  function handleCreateAccount(username, password) {
+    const trimmedUsername = username.trim();
+
+    if (!trimmedUsername || !password.trim()) {
+      window.alert("Enter a username and password.");
+      return false;
+    }
+
+    if (trimmedUsername.includes("/")) {
+      window.alert('Username cannot include "/".');
+      return false;
+    }
+
+    if (hasStoredUser(trimmedUsername)) {
+      window.alert("Username already exists.");
+      return false;
+    }
+
+    createStoredUser(trimmedUsername, password);
+    setStoredCurrentUser(trimmedUsername);
+    setCurrentUser(trimmedUsername);
+    return true;
+  }
+
+  function handleSignIn(username, password) {
+    const trimmedUsername = username.trim();
+
+    if (!trimmedUsername || !password.trim()) {
+      window.alert("Enter a username and password.");
+      return false;
+    }
+
+    if (getStoredPassword(trimmedUsername) !== password) {
+      window.alert("Invalid username or password.");
+      return false;
+    }
+
+    setStoredCurrentUser(trimmedUsername);
+    setCurrentUser(trimmedUsername);
+    return true;
+  }
+
+  function handleLogOut() {
+    if (screens.length > 0) {
+      const didConfirmLogOut = window.confirm(
+        "Have you saved all of your work?",
+      );
+      if (!didConfirmLogOut) {
+        return false;
+      }
+    }
+
+    clearStoredCurrentUser();
+    setCurrentUser(null);
+    setScreens([]);
+    setSelectedScreenId(null);
+    setEnteringScreenId(null);
+    setHistory([]);
+    return true;
+  }
+
   function handleCreateScreen(initialRuns = []) {
     if (screens.length >= MAX_SCREENS) {
       return;
@@ -105,7 +175,7 @@ function Workspace() {
     setNextScreenId((currentId) => currentId + 1);
   }
 
-  function saveRunsToLocalStorage(targetRuns) {
+  function handleSaveRuns(targetRuns = runs) {
     const fileName = window.prompt("Please enter a name to save the file:");
     const trimmedFileName = fileName?.trim();
 
@@ -113,13 +183,18 @@ function Workspace() {
       return false;
     }
 
-    if (localStorage.getItem(trimmedFileName) !== null) {
+    if (trimmedFileName.includes("/")) {
+      window.alert('File name cannot include "/".');
+      return false;
+    }
+
+    if (hasUserFile(currentUser, trimmedFileName)) {
       window.alert("File already exists.");
       return false;
     }
 
     try {
-      localStorage.setItem(trimmedFileName, JSON.stringify(targetRuns));
+      saveUserFile(currentUser, trimmedFileName, targetRuns);
       return true;
     } catch {
       window.alert("Error! Could not save. Storage might be full.");
@@ -136,6 +211,33 @@ function Workspace() {
     if (screenId === enteringScreenId) {
       setEnteringScreenId(null);
     }
+  }
+
+  function closeScreen(screenId) {
+    rememberState();
+
+    const remainingScreens = screens.filter((screen) => screen.id !== screenId);
+    setScreens(remainingScreens);
+    setEnteringScreenId(null);
+
+    if (remainingScreens.length === 0) {
+      setSelectedScreenId(null);
+      return;
+    }
+
+    if (selectedScreenId !== screenId) {
+      return;
+    }
+
+    const closedScreenIndex = screens.findIndex(
+      (screen) => screen.id === screenId,
+    );
+    const fallbackScreen =
+      remainingScreens[closedScreenIndex] ??
+      remainingScreens[closedScreenIndex - 1] ??
+      remainingScreens[0];
+
+    setSelectedScreenId(fallbackScreen.id);
   }
 
   function handleInsertText(value) {
@@ -178,36 +280,13 @@ function Workspace() {
 
     const hasContent = getPlainText(screenToClose.runs).trim() !== "";
     if (hasContent) {
-      const shouldSave = window.confirm("Save this screen before closing?");
-      if (shouldSave && !saveRunsToLocalStorage(screenToClose.runs)) {
+      const shouldSave = window.confirm("Do you want to save before exiting?");
+      if (shouldSave && !handleSaveRuns(screenToClose.runs)) {
         return;
       }
     }
 
-    rememberState();
-
-    const remainingScreens = screens.filter((screen) => screen.id !== screenId);
-    setScreens(remainingScreens);
-    setEnteringScreenId(null);
-
-    if (remainingScreens.length === 0) {
-      setSelectedScreenId(null);
-      return;
-    }
-
-    if (selectedScreenId !== screenId) {
-      return;
-    }
-
-    const closedScreenIndex = screens.findIndex(
-      (screen) => screen.id === screenId,
-    );
-    const fallbackScreen =
-      remainingScreens[closedScreenIndex] ??
-      remainingScreens[closedScreenIndex - 1] ??
-      remainingScreens[0];
-
-    setSelectedScreenId(fallbackScreen.id);
+    closeScreen(screenId);
   }
 
   return (
@@ -225,9 +304,11 @@ function Workspace() {
         onScreenAnimationEnd={handleScreenAnimationEnd}
       />
       <Editor
+        currentUser={currentUser}
         runs={runs}
         canUndo={isDocumentOpen && history.length > 0}
         isDocumentOpen={isDocumentOpen}
+        canLoadRuns={screens.length < MAX_SCREENS}
         isCapsLockOn={isCapsLockOn}
         isVirtualShiftOn={isVirtualShiftOn}
         keyboardMode={keyboardMode}
@@ -242,7 +323,11 @@ function Workspace() {
         onDeleteWord={() => updateRuns(deleteLastWord(runs))}
         onInsertText={handleInsertText}
         onKeyboardModeChange={setKeyboardMode}
+        onCreateAccount={handleCreateAccount}
         onLoadRuns={handleLoadRuns}
+        onLogOut={handleLogOut}
+        onSaveRuns={handleSaveRuns}
+        onSignIn={handleSignIn}
         onToggleCapsLock={() =>
           setIsCapsLockOn((currentValue) => !currentValue)
         }
