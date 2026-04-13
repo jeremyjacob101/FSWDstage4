@@ -1,11 +1,15 @@
 import { useState } from "react";
 import "./StorageControls.css";
 
-export default function StorageControls({ runs, onLoadRuns }) {
+export default function StorageControls({ runs, canSave, onLoadRuns }) {
   const [savedFiles, setSavedFiles] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   function handleSaveClick() {
+    if (!canSave) {
+      return;
+    }
+
     const fileName = window.prompt("Please enter a name to save the file:");
     const trimmedFileName = fileName?.trim();
 
@@ -83,6 +87,7 @@ export default function StorageControls({ runs, onLoadRuns }) {
         className="editor-button editor-button-icon"
         onClick={handleSaveClick}
         title="Save As"
+        disabled={!canSave}
       >
         <img className="editor-icon" src="/icons/upload.svg" alt="Save As" />
       </button>

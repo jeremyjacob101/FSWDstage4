@@ -7,7 +7,7 @@
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   gap: 12px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .panel {
@@ -18,6 +18,7 @@
 }
 
 .screen {
+  position: relative;
   min-height: 0;
   padding: 12px;
   display: flex;
@@ -55,6 +56,155 @@
   vertical-align: text-bottom;
   background: #111827;
   animation: screen-cursor-blink 1s steps(1, end) infinite;
+}
+
+.screen-collection {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  overflow: visible;
+}
+
+.screen-stage {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  gap: 12px;
+}
+
+.screen-focus {
+  min-width: 0;
+  height: 100%;
+  opacity: 1;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.screen-focus.is-entering {
+  animation: screen-focus-enter 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.screen-preview {
+  min-width: 0;
+  height: 100%;
+  opacity: 0.52;
+  cursor: pointer;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.screen-preview:hover,
+.screen-preview:focus-visible {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+.screen-preview .screen-paper {
+  padding: 14px;
+  overflow: hidden;
+}
+
+.screen-preview .screen-cursor {
+  display: none;
+}
+
+.screen-empty-state {
+  align-items: center;
+  justify-content: center;
+}
+
+.screen-add-button {
+  border: none;
+  background: none;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.screen-add-circle {
+  display: grid;
+  place-items: center;
+  width: 132px;
+  aspect-ratio: 1;
+  border: 3px dashed #4b5563;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.94);
+  color: #4b5563;
+  font-size: 4.25rem;
+  line-height: 1;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.screen-add-button:hover .screen-add-circle,
+.screen-add-button:focus-visible .screen-add-circle {
+  transform: translateY(-2px);
+  background: #ffffff;
+  border-color: #374151;
+  color: #374151;
+}
+
+.screen-add-circle-small {
+  width: 76px;
+  font-size: 2.75rem;
+}
+
+.screen-add-button-side {
+  position: absolute;
+  top: 50%;
+  right: -100px;
+  z-index: 20;
+  transform: translateY(-50%);
+}
+
+.screen-close-button {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 999px;
+  background: #d14a4a;
+  box-shadow: 0 0 0 2px rgb(249 250 251 / 0.92);
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.92;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.screen-close-button:hover,
+.screen-close-button:focus-visible {
+  background: #b91c1c;
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.screen-close-icon {
+  display: block;
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+}
+
+.screen-preview:focus-visible,
+.screen-add-button:focus-visible {
+  outline: 2px solid #4b5563;
+  outline-offset: 3px;
 }
 
 .editor {
@@ -314,7 +464,6 @@
 }
 
 @keyframes screen-cursor-blink {
-
   0%,
   49% {
     opacity: 1;
@@ -323,5 +472,17 @@
   50%,
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes screen-focus-enter {
+  from {
+    opacity: 0;
+    transform: translateX(52px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

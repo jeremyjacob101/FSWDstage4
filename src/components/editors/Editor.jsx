@@ -6,6 +6,7 @@ function Editor({
   runs,
   onLoadRuns,
   canUndo,
+  isDocumentOpen,
   isCapsLockOn,
   isVirtualShiftOn,
   keyboardMode,
@@ -31,6 +32,7 @@ function Editor({
     <section className="panel editor">
       <Keyboard
         canUndo={canUndo}
+        isDocumentOpen={isDocumentOpen}
         isCapsLockOn={isCapsLockOn}
         isVirtualShiftOn={isVirtualShiftOn}
         keyboardMode={keyboardMode}
@@ -51,14 +53,23 @@ function Editor({
 
       <div className="editor-sidebar">
         <div className="editor-sidebar-header">
-          <button type="button" className="editor-button editor-button-icon">
+          <button
+            type="button"
+            className="editor-button editor-button-icon"
+            disabled={!isDocumentOpen}
+          >
             <img className="editor-icon" src="/icons/user.svg" alt="User" />
           </button>
 
-          <StorageControls runs={runs} onLoadRuns={onLoadRuns} />
+          <StorageControls
+            runs={runs}
+            canSave={isDocumentOpen}
+            onLoadRuns={onLoadRuns}
+          />
         </div>
 
         <TextStyling
+          isDocumentOpen={isDocumentOpen}
           typingStyle={typingStyle}
           onApplyAll={onApplyAll}
           onChangeTypingStyle={onChangeTypingStyle}

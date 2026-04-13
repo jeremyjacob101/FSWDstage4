@@ -2,6 +2,7 @@ import { getKeyboardRows, getNextKeyboardMode } from "../utils/Helpers";
 
 function Keyboard({
   canUndo,
+  isDocumentOpen,
   isCapsLockOn,
   isVirtualShiftOn,
   keyboardMode,
@@ -45,6 +46,7 @@ function Keyboard({
           type="button"
           className="editor-button editor-button-icon"
           onClick={handleLanguageToggle}
+          disabled={!isDocumentOpen}
         >
           <img className="editor-icon" src="/icons/globe.svg" />
         </button>
@@ -55,17 +57,20 @@ function Keyboard({
             value={searchValue}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Find"
+            disabled={!isDocumentOpen}
           />
           <input
             type="text"
             value={replaceValue}
             onChange={(event) => onReplaceChange(event.target.value)}
             placeholder="Replace"
+            disabled={!isDocumentOpen}
           />
           <button
             type="button"
             className="editor-button editor-button-icon"
             onClick={onReplace}
+            disabled={!isDocumentOpen}
           >
             <img className="editor-icon" src="/icons/replace.svg" />
           </button>
@@ -76,7 +81,7 @@ function Keyboard({
             type="button"
             className="editor-button editor-button-icon"
             onClick={onUndo}
-            disabled={!canUndo}
+            disabled={!canUndo || !isDocumentOpen}
           >
             <img className="editor-icon" src="/icons/undo.svg" />
           </button>
@@ -84,6 +89,7 @@ function Keyboard({
             type="button"
             className="editor-button editor-button-danger"
             onClick={onClearText}
+            disabled={!isDocumentOpen}
           >
             Clear
           </button>
@@ -98,6 +104,7 @@ function Keyboard({
               key={keyValue}
               className="keyboard-key"
               onClick={() => onInsertText(keyValue)}
+              disabled={!isDocumentOpen}
             >
               {keyValue}
             </button>
@@ -107,6 +114,7 @@ function Keyboard({
             type="button"
             className="keyboard-key keyboard-key-delete"
             onClick={handleDeleteClick}
+            disabled={!isDocumentOpen}
           >
             Delete
           </button>
@@ -117,6 +125,7 @@ function Keyboard({
             type="button"
             className="keyboard-key keyboard-key-tab"
             onClick={() => onInsertText("\t")}
+            disabled={!isDocumentOpen}
           >
             Tab
           </button>
@@ -127,6 +136,7 @@ function Keyboard({
               key={keyValue}
               className="keyboard-key"
               onClick={() => onInsertText(keyValue)}
+              disabled={!isDocumentOpen}
             >
               {keyValue}
             </button>
@@ -142,6 +152,7 @@ function Keyboard({
                 : "keyboard-key keyboard-key-caps"
             }
             onClick={onToggleCapsLock}
+            disabled={!isDocumentOpen}
           >
             Caps
           </button>
@@ -152,6 +163,7 @@ function Keyboard({
               key={keyValue}
               className="keyboard-key"
               onClick={() => onInsertText(keyValue)}
+              disabled={!isDocumentOpen}
             >
               {keyValue}
             </button>
@@ -161,6 +173,7 @@ function Keyboard({
             type="button"
             className="keyboard-key keyboard-key-enter"
             onClick={() => onInsertText("\n")}
+            disabled={!isDocumentOpen}
           >
             Enter
           </button>
@@ -175,6 +188,7 @@ function Keyboard({
                 : "keyboard-key keyboard-key-shift"
             }
             onClick={onToggleVirtualShift}
+            disabled={!isDocumentOpen}
           >
             Shift
           </button>
@@ -185,6 +199,7 @@ function Keyboard({
               key={keyValue}
               className="keyboard-key"
               onClick={() => onInsertText(keyValue)}
+              disabled={!isDocumentOpen}
             >
               {keyValue}
             </button>
@@ -198,6 +213,7 @@ function Keyboard({
                 : "keyboard-key keyboard-key-shift"
             }
             onClick={onToggleVirtualShift}
+            disabled={!isDocumentOpen}
           >
             Shift
           </button>
@@ -208,6 +224,7 @@ function Keyboard({
             type="button"
             className="keyboard-key keyboard-key-space"
             onClick={() => onInsertText(" ")}
+            disabled={!isDocumentOpen}
           >
             Space
           </button>

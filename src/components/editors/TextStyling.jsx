@@ -5,6 +5,7 @@ import {
 } from "../utils/Defaults";
 
 function TextStyling({
+  isDocumentOpen,
   typingStyle,
   onApplyAll,
   onChangeTypingStyle,
@@ -26,6 +27,7 @@ function TextStyling({
             onChange={(event) =>
               onChangeTypingStyle("fontFamily", event.target.value)
             }
+            disabled={!isDocumentOpen}
           >
             {DEFAULT_FONT_OPTIONS.map((font) => (
               <option key={font.value} value={font.value}>
@@ -39,6 +41,7 @@ function TextStyling({
             onChange={(event) =>
               onChangeTypingStyle("fontSize", Number(event.target.value))
             }
+            disabled={!isDocumentOpen}
           >
             {DEFAULT_SIZE_OPTIONS.map((size) => (
               <option key={size} value={size}>
@@ -57,6 +60,7 @@ function TextStyling({
                 : "editor-button editor-format-button"
             }
             onClick={() => toggleStyle("fontWeight", "700", "400")}
+            disabled={!isDocumentOpen}
           >
             B
           </button>
@@ -69,6 +73,7 @@ function TextStyling({
                 : "editor-button editor-format-button"
             }
             onClick={() => toggleStyle("fontStyle", "italic", "normal")}
+            disabled={!isDocumentOpen}
           >
             I
           </button>
@@ -81,6 +86,7 @@ function TextStyling({
                 : "editor-button editor-format-button"
             }
             onClick={() => toggleStyle("textDecoration", "underline", "none")}
+            disabled={!isDocumentOpen}
           >
             U
           </button>
@@ -98,6 +104,7 @@ function TextStyling({
               }
               style={{ backgroundColor: color }}
               onClick={() => onChangeTypingStyle("color", color)}
+              disabled={!isDocumentOpen}
             />
           ))}
         </div>
@@ -106,6 +113,7 @@ function TextStyling({
           type="button"
           className="editor-button editor-button-primary editor-button-full"
           onClick={onApplyAll}
+          disabled={!isDocumentOpen}
         >
           Apply All
         </button>
@@ -114,6 +122,7 @@ function TextStyling({
           type="button"
           className="editor-button editor-button-full"
           onClick={onResetTypingStyle}
+          disabled={!isDocumentOpen}
         >
           Reset
         </button>
