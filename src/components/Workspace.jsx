@@ -115,11 +115,6 @@ function Workspace() {
       return false;
     }
 
-    if (trimmedUsername.includes("/")) {
-      window.alert('Username cannot include "/".');
-      return false;
-    }
-
     if (hasStoredUser(trimmedUsername)) {
       window.alert("Username already exists.");
       return false;
