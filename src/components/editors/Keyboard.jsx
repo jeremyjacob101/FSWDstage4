@@ -1,6 +1,9 @@
 import { getKeyboardRows, getNextKeyboardMode } from "../utils/Helpers";
+import StorageControls from "../storage/StorageControls";
 
 function Keyboard({
+  runs,
+  onLoadRuns,
   canUndo,
   isCapsLockOn,
   isVirtualShiftOn,
@@ -49,6 +52,7 @@ function Keyboard({
         >
           <img className="editor-icon" src="/icons/globe.svg" />
         </button>
+        <StorageControls runs={runs} onLoadRuns={onLoadRuns} />
 
         <div className="editor-find-replace">
           <input

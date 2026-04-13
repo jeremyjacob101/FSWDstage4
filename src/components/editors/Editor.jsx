@@ -2,6 +2,8 @@ import Keyboard from "./Keyboard";
 import TextStyling from "./TextStyling";
 
 function Editor({
+  runs,
+  onLoadRuns,
   canUndo,
   isCapsLockOn,
   isVirtualShiftOn,
@@ -26,6 +28,8 @@ function Editor({
   return (
     <section className="panel editor">
       <Keyboard
+        runs={runs}
+        onLoadRuns={onLoadRuns}
         canUndo={canUndo}
         isCapsLockOn={isCapsLockOn}
         isVirtualShiftOn={isVirtualShiftOn}

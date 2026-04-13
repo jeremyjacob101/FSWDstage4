@@ -72,6 +72,11 @@ function Workspace() {
   };
 
   const editorProps = {
+    runs,
+    onLoadRuns: (newRuns) => {
+      rememberState();
+      setRuns(newRuns);
+    },
     canUndo: history.length > 0,
     isCapsLockOn,
     isVirtualShiftOn,
