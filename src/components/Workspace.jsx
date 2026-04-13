@@ -44,6 +44,7 @@ function Workspace() {
   const [replaceValue, setReplaceValue] = useState("");
   const [history, setHistory] = useState([]);
   const [redoHistory, setRedoHistory] = useState([]);
+
   const activeScreen =
     screens.find((screen) => screen.id === selectedScreenId) ??
     screens[0] ??
