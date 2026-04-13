@@ -1,93 +1,98 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import "./StorageControls.css";
 
 export default function StorageControls({ runs, onLoadRuns }) {
   const [savedFiles, setSavedFiles] = useState([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
+  function handleSaveClick() {
+    const fileName = window.prompt("Please enter a name to save the file:");
+    
+    if (!fileName) {
+      return;
+    }
+
+    try {
+      const dataAsText = JSON.stringify(runs);
+      localStorage.setItem(`save_${fileName}`, dataAsText);
+      
+      if (isMenuOpen) {
+         updateSavedFilesList();
       }
+    } catch (error) {
+      window.alert("Error! Could not save. Storage might be full.");
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    loadSavedFiles();
-  }, []);
-
-  function loadSavedFiles() {
-    const files = [];
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('save_')) {
-            files.push(key.substring(5));
-        }
-    }
-    setSavedFiles(files);
   }
 
-  const handleSave = () => {
-    const name = window.prompt("Enter a name to save this text (Save As):");
-    if (!name) return;
-    try {
-        localStorage.setItem(`save_${name}`, JSON.stringify(runs));
-        loadSavedFiles();
-    } catch (e) {
-        window.alert("Failed to save. Storage might be full.");
-    }
-  };
-
-  const handleLoad = (name) => {
-    if (!name) return;
-    try {
-        const data = localStorage.getItem(`save_${name}`);
-        if (data) {
-            const parsed = JSON.parse(data);
-            onLoadRuns(parsed);
+  function updateSavedFilesList() {
+    const filesFound = [];
+    
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("save_")) {
+            const justTheName = key.substring(5);
+            filesFound.push(justTheName);
         }
-    } catch (e) {
-        window.alert("Failed to load file.");
     }
-    setIsDropdownOpen(false);
-  };
+    
+    setSavedFiles(filesFound);
+  }
+
+  function handleDownloadMenuClick() {
+    if (!isMenuOpen) {
+      updateSavedFilesList();
+      setIsMenuOpen(true);
+    } else {
+      setIsMenuOpen(false);
+    }
+  }
+
+  function handleLoadFile(fileName) {
+    try {
+      const savedData = localStorage.getItem(`save_${fileName}`);
+      if (savedData) {
+        const parsedRuns = JSON.parse(savedData);
+        onLoadRuns(parsedRuns);
+      }
+    } catch (error) {
+      window.alert("Error loading file.");
+    }
+    
+    setIsMenuOpen(false);
+  }
 
   return (
     <>
       <button
         type="button"
         className="editor-button editor-button-icon"
-        onClick={handleSave}
+        onClick={handleSaveClick}
         title="Save As"
       >
         <img className="editor-icon" src="/icons/upload.svg" alt="Save As" />
       </button>
 
-      <div className="storage-dropdown-container" ref={dropdownRef}>
+      <div className="storage-dropdown-container">
         <button
           type="button"
           className="editor-button editor-button-icon"
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          title="Load"
+          onClick={handleDownloadMenuClick}
+          title="Load File"
         >
           <img className="editor-icon" src="/icons/download.svg" alt="Load" />
         </button>
 
-        {isDropdownOpen && (
+        {isMenuOpen && (
           <div className="storage-dropdown-menu">
             {savedFiles.length === 0 ? (
-              <div className="storage-dropdown-empty">No saved files</div>
+              <div className="storage-dropdown-empty">No files to load</div>
             ) : (
               savedFiles.map((file) => (
                 <button
                   key={file}
                   type="button"
                   className="storage-dropdown-item"
-                  onClick={() => handleLoad(file)}
+                  onClick={() => handleLoadFile(file)}
                 >
                   {file}
                 </button>
