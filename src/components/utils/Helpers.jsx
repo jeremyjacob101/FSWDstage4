@@ -1,5 +1,21 @@
 import { DEFAULT_STYLE, DEFAULT_KEYBOARD_LAYOUTS } from "./Defaults";
 
+// Cloning
+export function cloneRuns(runs) {
+  return runs.map((run) => ({
+    text: run.text,
+    style: { ...run.style },
+  }));
+}
+
+export function cloneScreens(screens) {
+  return screens.map((screen) => ({
+    id: screen.id,
+    runs: cloneRuns(screen.runs),
+  }));
+}
+// Cloning
+
 function mapLetterCase(row, transform) {
   return row.map((key) => (/^[a-zA-Z]$/.test(key) ? transform(key) : key));
 }
@@ -24,20 +40,6 @@ export function getKeyboardRows(keyboardMode, isShiftActive, isCapsLockOn) {
 
 export function getNextKeyboardMode(keyboardMode) {
   return keyboardMode === "english" ? "hebrew" : "english";
-}
-
-export function cloneRuns(runs) {
-  return runs.map((run) => ({
-    text: run.text,
-    style: { ...run.style },
-  }));
-}
-
-export function cloneScreens(screens) {
-  return screens.map((screen) => ({
-    id: screen.id,
-    runs: cloneRuns(screen.runs),
-  }));
 }
 
 export function sameStyle(firstStyle, secondStyle) {
