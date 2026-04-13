@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { listUserFiles, loadUserFile } from "../utils/AuthStorage";
-import "./StorageControls.css";
+import "./Storage.css";
 
 export default function StorageControls({
   currentUser,

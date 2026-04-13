@@ -1,0 +1,255 @@
+.editor {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 13fr) minmax(320px, 5fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+.editor-sidebar {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.editor-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.editor-keyboard-pane,
+.editor-controls-pane {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.editor-top-bar,
+.keyboard-row,
+.editor-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.editor-top-bar {
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.editor-top-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.editor-find-replace {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.editor-button,
+.keyboard-key,
+.editor select,
+.editor input {
+  min-height: 44px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font: inherit;
+}
+
+.editor-button,
+.keyboard-key {
+  padding: 10px 12px;
+  background: #ffffff;
+  color: #1f2937;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.editor-button:hover,
+.keyboard-key:hover,
+.editor-color:hover {
+  transform: translateY(-1px);
+}
+
+.editor-button-primary {
+  background: #4b5563;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+.editor-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: #d1d5db;
+  border-radius: 14px;
+}
+
+.keyboard-row {
+  flex-wrap: nowrap;
+}
+
+.keyboard-key {
+  flex: 1;
+  min-width: 0;
+}
+
+.keyboard-key-delete,
+.keyboard-key-enter {
+  flex: 1.5;
+}
+
+.keyboard-key-tab {
+  flex: 1.25;
+}
+
+.keyboard-key-caps {
+  flex: 1.45;
+}
+
+.keyboard-key-shift {
+  flex: 1.7;
+}
+
+.keyboard-key.is-active {
+  background: #4b5563;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+.keyboard-bottom {
+  display: flex;
+  justify-content: center;
+  padding-top: 2px;
+}
+
+.keyboard-key-space {
+  flex: 0 0 min(46%, 340px);
+}
+
+.editor-controls-pane {
+  padding-left: 2px;
+  gap: 12px;
+}
+
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+}
+
+.editor-control-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.editor-control-grid-stack {
+  grid-template-columns: 1fr;
+}
+
+.editor-format-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.editor-format-button {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.editor-format-button:nth-child(2) {
+  font-style: italic;
+}
+
+.editor-format-button:nth-child(3) {
+  text-decoration: underline;
+}
+
+.editor-format-button.is-active {
+  background: #4b5563;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+.editor select,
+.editor input {
+  width: 100%;
+  padding: 10px 12px;
+  background: #ffffff;
+  color: #111827;
+}
+
+.editor-find-replace input {
+  flex: 0 1 130px;
+  min-width: 0;
+}
+
+.editor-colors {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: center;
+}
+
+.editor-color {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid transparent;
+  border-radius: 999px;
+}
+
+.editor-color.is-active {
+  border-color: #111827;
+}
+
+.editor-button-full {
+  width: 100%;
+}
+
+.editor-button-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  padding: 0;
+}
+
+.editor-button-compact {
+  flex: 0 0 auto;
+  min-width: 90px;
+}
+
+.editor-button-danger {
+  border-color: #d9b7b7;
+  background: #fff5f5;
+  color: #7f1d1d;
+}
+
+.editor-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.editor-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}

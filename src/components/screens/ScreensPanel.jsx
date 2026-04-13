@@ -1,4 +1,5 @@
 import Screen from "./Screen";
+import "./Screens.css";
 
 function ScreensPanel({
   screens,

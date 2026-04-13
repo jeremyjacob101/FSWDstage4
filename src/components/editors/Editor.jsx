@@ -2,6 +2,7 @@ import Keyboard from "./Keyboard";
 import UserMenu from "../auth/UserMenu";
 import StorageControls from "../storage/StorageControls";
 import TextStyling from "./TextStyling";
+import "./Editors.css";
 
 function Editor({
   currentUser,

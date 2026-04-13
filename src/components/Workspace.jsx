@@ -140,7 +140,7 @@ function Workspace() {
   function handleLogOut() {
     if (screens.length > 0) {
       const didConfirmLogOut = window.confirm(
-        "Have you saved all of your work?",
+        "Log out now? Make sure you've saved any work you want to keep.",
       );
       if (!didConfirmLogOut) {
         return false;
@@ -280,8 +280,10 @@ function Workspace() {
 
     const hasContent = getPlainText(screenToClose.runs).trim() !== "";
     if (hasContent) {
-      const shouldSave = window.confirm("Do you want to save before exiting?");
-      if (shouldSave && !handleSaveRuns(screenToClose.runs)) {
+      const shouldClose = window.confirm(
+        "Close this screen? Make sure you've saved any work you want to keep.",
+      );
+      if (!shouldClose) {
         return;
       }
     }
